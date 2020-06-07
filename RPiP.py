@@ -31,7 +31,7 @@ async def hello(ctx):
 @bot.command()
 async def report_ip(self):
     await self.wait_until_ready()
-    channel = self.get_channel(CHANNEL_ID)  # channel ID goes here.
+    channel = self.get_channel(CHANNEL_ID)  # channel ID goes here as an integer
     old_ip = requests.get('https://checkip.amazonaws.com').text.strip()
 
     while not self.is_closed():
