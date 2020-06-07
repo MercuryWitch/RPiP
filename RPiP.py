@@ -24,7 +24,7 @@ class RPiPClient(discord.Client):
         print('------')
 
     async def report_ip_background_task(self):
-        wait self.wait_until_ready()
+        await self.wait_until_ready()
         channel = self.get_channel(CHANNEL_ID)  # channel ID goes here as an integer
         old_ip = requests.get('https://checkip.amazonaws.com').text.strip()
 
