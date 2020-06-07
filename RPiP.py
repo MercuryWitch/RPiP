@@ -8,7 +8,7 @@ from discord.ext import commands
 TOKEN = 'YOUR TOKEN HERE'
 
 # The Dominions 5 server's ip-address channel id. Obtained by right clicking the channel and copying ID.
-CHANNEL_ID = 715680985613860917
+CHANNEL_ID = 'YOUR CHANNEL ID HERE'
 
 description = '''RPiP in Python: Reports the IP of the device as a channel message on Discord.'''
 bot = commands.Bot(command_prefix='?', description=description)
