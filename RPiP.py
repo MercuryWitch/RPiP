@@ -13,7 +13,14 @@ CHANNEL_ID = 0  # YOUR CHANNEL ID HERE, it should be an integer
 class RPiPClient(discord.Client):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
+        
+        # Try to initialize the ip address.
+        try:
+            self.my_ip = requests.get('https://checkip.amazonaws.com').text.strip()
+        except:
+            print('Something seems to have gone wrong.')
+            await channel.send("Oh dear, I think something went wrong, sorry.")
+        
         # create the background task and run it in the background
         self.bg_task = self.loop.create_task(self.report_ip_background_task())
 
@@ -26,13 +33,17 @@ class RPiPClient(discord.Client):
     async def report_ip_background_task(self):
         await self.wait_until_ready()
         channel = self.get_channel(CHANNEL_ID)
-        old_ip = requests.get('https://checkip.amazonaws.com').text.strip()
-        await channel.send(old_ip)
+        await channel.send(self.my_ip)
         
         while not self.is_closed():
-            current_ip = requests.get('https://checkip.amazonaws.com').text.strip()
-            if old_ip != current_ip:
+            try:
+                current_ip = requests.get('https://checkip.amazonaws.com').text.strip()
+            except:
+                current_ip = self.my_ip
+                print("Heads up, the bot had an exception when it tried to check the current ip")
+            if self.my_ip != current_ip:
                 await channel.send(current_ip)
+                self.my_ip = current_ip
             await asyncio.sleep(300)  # task runs every 300 seconds (5 minutes)
     
     async def on_message(self, message):
@@ -41,7 +52,10 @@ class RPiPClient(discord.Client):
             return
 
         if message.content.startswith('?ip'):
-            await message.channel.send(requests.get('https://checkip.amazonaws.com').text.strip())
+            try:
+                await message.channel.send(requests.get('https://checkip.amazonaws.com').text.strip())
+            except:
+                await message.channel.send("Looks like there was a problem with getting the ip address, try again later.")
 
 
 client = RPiPClient()
