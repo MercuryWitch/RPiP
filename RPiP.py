@@ -19,7 +19,7 @@ class RPiPClient(discord.Client):
             self.my_ip = requests.get('https://checkip.amazonaws.com').text.strip()
         except:
             print('Something seems to have gone wrong.')
-            await channel.send("Oh dear, I think something went wrong, sorry.")
+            await self.get_channel(CHANNEL_ID).send("Oh dear, I think something went wrong, sorry.")
         
         # create the background task and run it in the background
         self.bg_task = self.loop.create_task(self.report_ip_background_task())
